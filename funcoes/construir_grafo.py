@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -62,3 +63,52 @@ def construir_grafo(B: np.ndarray, m: int, n: int) -> np.ndarray:
                     A[v, u] = 1
 
     return A
+
+
+def visualizar_grafo(B: np.ndarray, A: np.ndarray, m: int, n: int):
+    """
+    Mostra o grafo sobreposto à imagem binária do labirinto.
+    B: imagem binária (1 = livre, 0 = parede).
+    A: matriz de adjacência.
+    m, n: número de linhas e colunas da grade.
+    """
+
+    altura, largura = B.shape
+
+    fig, ax = plt.subplots(figsize=(10, 10))
+
+    # Mostra o labirinto.
+    ax.imshow(B, cmap="gray", origin="upper")
+
+    # Calcula a posição dos centros das células.
+    xs = [(j + 0.5) * largura / n for j in range(n)]
+    ys = [(i + 0.5) * altura / m for i in range(m)]
+
+    # Desenha as arestas.
+    for u in range(m * n):
+        i, j = divmod(u, n)
+
+        for v in range(u + 1, m * n):
+            if A[u, v] == 1:
+                i2, j2 = divmod(v, n)
+
+                x1, y1 = xs[j], ys[i]
+                x2, y2 = xs[j2], ys[i2]
+
+                ax.plot(
+                    [x1, x2],
+                    [y1, y2],
+                    color="red",
+                    linewidth=0.8,
+                    alpha=0.8,
+                )
+
+    # Desenha os vértices.
+    for y in ys:
+        for x in xs:
+            ax.scatter(x, y, color="blue", s=8)
+
+    ax.set_title("Grafo sobreposto ao labirinto")
+    ax.set_axis_off()
+    plt.tight_layout()
+    plt.show()
