@@ -1,7 +1,7 @@
-from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
 from funcoes.encontrar_extremos import encontrar_extremos
+from PIL import Image
 
 # Ler a imagem para processamento
 img = np.array(Image.open("labirinto.jpeg"))
