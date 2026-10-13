@@ -2,113 +2,107 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+def coordenadas_centros(B: np.ndarray, m: int, n: int):
+    """
+    Calcula as coordenadas dos centros dos vértices.
+    Esta versão considera um deslocamento de meia célula
+    em relação à grade anterior.
+    """
+    altura, largura = B.shape
+
+    xs = [(j + 1) * largura / n - 0.5 for j in range(n)]
+    ys = [(i + 1) * altura / m - 0.5 for i in range(m)]
+
+    return xs, ys
+
+
 def construir_grafo(B: np.ndarray, m: int, n: int) -> np.ndarray:
     """
-    Constrói a matriz de adjacência do grafo do labirinto.
-
-    Args:
-        B (np.ndarray): Imagem binária (1 = livre, 0 = parede).
-        m (int): Número de linhas da grade.
-        n (int): Número de colunas da grade.
-
-    Returns:
-        np.ndarray: Matriz de adjacência A, de dimensão (m*n, m*n).
+    B: imagem binária (1 = corredor, 0 = parede).
+    Retorna a matriz de adjacência do grafo.
     """
-
     if B.ndim != 2:
-        raise ValueError("A imagem binária deve ser uma matriz 2D.")
+        raise ValueError("A imagem binária deve ser 2D.")
 
     if m <= 0 or n <= 0:
         raise ValueError("As dimensões da grade devem ser positivas.")
 
     altura, largura = B.shape
     A = np.zeros((m * n, m * n), dtype=int)
+    xs, ys = coordenadas_centros(B, m, n)
 
     def passagem_livre(x1, y1, x2, y2):
-        # Verifica os pixels entre os centros das duas células.
         x1, y1 = round(x1), round(y1)
         x2, y2 = round(x2), round(y2)
 
         if y1 == y2:
-            pixels = B[y1, min(x1, x2) : max(x1, x2) + 1]
+            pixels = B[y1, min(x1, x2):max(x1, x2) + 1]
         else:
-            pixels = B[min(y1, y2) : max(y1, y2) + 1, x1]
+            pixels = B[min(y1, y2):max(y1, y2) + 1, x1]
 
         return np.all(pixels == 1)
 
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            u = (i - 1) * n + j - 1
+    for i in range(m):
+        for j in range(n):
+            u = i * n + j
 
-            # Centro da célula em pixels.
-            x = (j - 0.5) * largura / n
-            y = (i - 0.5) * altura / m
-
-            # Vizinho à direita.
-            if j < n:
-                x_dir = (j + 0.5) * largura / n
-
-                if passagem_livre(x, y, x_dir, y):
+            # Vizinho à direita
+            if j + 1 < n:
+                if passagem_livre(xs[j], ys[i], xs[j + 1], ys[i]):
                     v = u + 1
-                    A[u, v] = 1
-                    A[v, u] = 1
+                    A[u, v] = A[v, u] = 1
 
-            # Vizinho abaixo.
-            if i < m:
-                y_baixo = (i + 0.5) * altura / m
-
-                if passagem_livre(x, y, x, y_baixo):
+            # Vizinho abaixo
+            if i + 1 < m:
+                if passagem_livre(xs[j], ys[i], xs[j], ys[i + 1]):
                     v = u + n
-                    A[u, v] = 1
-                    A[v, u] = 1
+                    A[u, v] = A[v, u] = 1
 
     return A
 
 
 def visualizar_grafo(B: np.ndarray, A: np.ndarray, m: int, n: int):
     """
-    Mostra o grafo sobreposto à imagem binária do labirinto.
-    B: imagem binária (1 = livre, 0 = parede).
-    A: matriz de adjacência.
-    m, n: número de linhas e colunas da grade.
+    Desenha os vértices e as arestas sobre a imagem.
     """
+    if A.shape != (m * n, m * n):
+        raise ValueError("Dimensão incompatível da matriz de adjacência.")
 
     altura, largura = B.shape
+    xs, ys = coordenadas_centros(B, m, n)
 
-    fig, ax = plt.subplots(figsize=(10, 10))
+    fig, ax = plt.subplots(figsize=(12, 12))
+    ax.imshow(B, cmap="gray", origin="upper", interpolation="nearest")
 
-    # Mostra o labirinto.
-    ax.imshow(B, cmap="gray", origin="upper")
+    for i in range(m):
+        for j in range(n):
+            u = i * n + j
 
-    # Calcula a posição dos centros das células.
-    xs = [(j + 0.5) * largura / n for j in range(n)]
-    ys = [(i + 0.5) * altura / m for i in range(m)]
-
-    # Desenha as arestas.
-    for u in range(m * n):
-        i, j = divmod(u, n)
-
-        for v in range(u + 1, m * n):
-            if A[u, v] == 1:
-                i2, j2 = divmod(v, n)
-
-                x1, y1 = xs[j], ys[i]
-                x2, y2 = xs[j2], ys[i2]
-
+            if j + 1 < n and A[u, u + 1] == 1:
                 ax.plot(
-                    [x1, x2],
-                    [y1, y2],
+                    [xs[j], xs[j + 1]],
+                    [ys[i], ys[i]],
                     color="red",
-                    linewidth=0.8,
-                    alpha=0.8,
+                    linewidth=1.5,
                 )
 
-    # Desenha os vértices.
+            if i + 1 < m and A[u, u + n] == 1:
+                ax.plot(
+                    [xs[j], xs[j]],
+                    [ys[i], ys[i + 1]],
+                    color="red",
+                    linewidth=1.5,
+                )
+
     for y in ys:
         for x in xs:
-            ax.scatter(x, y, color="blue", s=8)
+            ax.scatter(x, y, color="blue", s=12, zorder=3)
 
     ax.set_title("Grafo sobreposto ao labirinto")
+    ax.set_xlim(-0.5, largura - 0.5)
+    ax.set_ylim(altura - 0.5, -0.5)
+    ax.set_aspect("equal")
     ax.set_axis_off()
+
     plt.tight_layout()
     plt.show()
