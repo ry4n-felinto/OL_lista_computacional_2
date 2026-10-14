@@ -1,42 +1,65 @@
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
-
-# 1. Carrega a imagem do labirinto
-pasta = Path(__file__).resolve().parent
-caminho_imagem = pasta / "labirinto.jpeg"
-
-imagem = Image.open(caminho_imagem).convert("L")
-pixels = np.array(imagem)
-
-# 2. Cria a matriz binária
-B = (pixels > 127).astype(np.uint8)
-
-print("Dimensões da imagem:", B.shape)
-print("Valores encontrados:", np.unique(B))
+from funcoes.construir_grafo import (
+    construir_grafo,
+    visualizar_grafo,
+)
 
 
-# 3. Mostra a grade sobre o labirinto
-fig, ax = plt.subplots(figsize=(12, 12))
+def carregar_labirinto(caminho: Path) -> np.ndarray:
+    """
+    Carrega, recorta e binariza o labirinto.
 
-ax.imshow(B, cmap="gray", origin="upper")
+    1 = caminho livre
+    0 = parede
+    """
+    if not caminho.exists():
+        raise FileNotFoundError(f"Imagem não encontrada: {caminho}")
 
-altura, largura = B.shape
+    imagem = np.array(Image.open(caminho).convert("L"))
 
-for j in range(21):
-    x = j * largura / 20 - 0.5
-    ax.axvline(x, color="cyan", linewidth=0.7)
+    # Localiza as margens escuras do labirinto.
+    linhas, colunas = np.where(imagem < 128)
 
-for i in range(21):
-    y = i * altura / 20 - 0.5
-    ax.axhline(y, color="cyan", linewidth=0.7)
+    if linhas.size == 0 or colunas.size == 0:
+        raise ValueError("Não foi possível localizar o labirinto na imagem.")
 
-ax.set_title("Diagnóstico: limites da grade 20 x 20")
-ax.set_xlim(-0.5, largura - 0.5)
-ax.set_ylim(altura - 0.5, -0.5)
-ax.set_aspect("equal")
-plt.tight_layout()
-plt.show()
+    # Recorta a margem branca externa.
+    imagem = imagem[linhas.min() : linhas.max() + 1, colunas.min() : colunas.max() + 1]
+
+    # Binariza a imagem.
+    B = (imagem > 128).astype(np.uint8)
+
+    return B
+
+
+def main():
+    pasta = Path(__file__).resolve().parent
+    caminho = pasta / "labirinto.jpeg"
+
+    B = carregar_labirinto(caminho)
+
+    m = 20
+    n = 20
+
+    print("Dimensões da imagem binária:", B.shape)
+    print("Valores da imagem:", np.unique(B))
+
+    A = construir_grafo(B, m, n)
+
+    numero_vertices = m * n
+    numero_arestas = int(np.sum(A) // 2)
+
+    print("Número de vértices:", numero_vertices)
+    print("Número de arestas:", numero_arestas)
+    print("Matriz de adjacência:")
+    print(A)
+
+    visualizar_grafo(B, A, m, n)
+
+
+if __name__ == "__main__":
+    main()
