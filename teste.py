@@ -17,27 +17,18 @@ def carregar_labirinto(caminho: Path) -> np.ndarray:
     0 = parede
     """
     if not caminho.exists():
-        raise FileNotFoundError(
-            f"Imagem não encontrada: {caminho}"
-        )
+        raise FileNotFoundError(f"Imagem não encontrada: {caminho}")
 
-    imagem = np.array(
-        Image.open(caminho).convert("L")
-    )
+    imagem = np.array(Image.open(caminho).convert("L"))
 
     # Localiza as margens escuras do labirinto.
     linhas, colunas = np.where(imagem < 128)
 
     if linhas.size == 0 or colunas.size == 0:
-        raise ValueError(
-            "Não foi possível localizar o labirinto na imagem."
-        )
+        raise ValueError("Não foi possível localizar o labirinto na imagem.")
 
     # Recorta a margem branca externa.
-    imagem = imagem[
-        linhas.min():linhas.max() + 1,
-        colunas.min():colunas.max() + 1
-    ]
+    imagem = imagem[linhas.min() : linhas.max() + 1, colunas.min() : colunas.max() + 1]
 
     # Binariza a imagem.
     B = (imagem > 128).astype(np.uint8)
