@@ -3,6 +3,14 @@ import numpy as np
 from funcoes.encontrar_extremos import encontrar_extremos
 from PIL import Image
 
+from funcoes.construir_grafo import construir_grafo
+from funcoes.id_no import id_no
+from funcoes.dijkstra import dijkstra
+from funcoes.reconstruir_caminho import reconstruir_caminho
+from funcoes.reconstruir_caminho import calcular_metricas
+from funcoes.visualizacao import visualizar_caminho
+from funcoes.visualizacao import visualizar_grafo_caminho
+
 # Ler a imagem para processamento
 img = np.array(Image.open("labirinto.jpeg"))
 
