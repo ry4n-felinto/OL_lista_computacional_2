@@ -119,7 +119,7 @@ def visualizar_grafo_caminho(B, A, m, n, caminho=None,mostrar_labirinto=True,nom
                     ax.plot(
                         [xs[j], xs[j + 1]], # Coordenadas x: centro atual e centro à direita.
                         [ys[i], ys[i]],     # Coordenadas y: mesma linha.
-                        color="red",
+                        color="cyan",
                         linewidth=1.2,
                         zorder=2
                     )
@@ -129,7 +129,7 @@ def visualizar_grafo_caminho(B, A, m, n, caminho=None,mostrar_labirinto=True,nom
                     ax.plot(
                         [xs[j], xs[j]],
                         [ys[i], ys[i + 1]],
-                        color="red",
+                        color="cyan",
                         linewidth=1.2,
                         zorder=2
                     )
@@ -143,7 +143,7 @@ def visualizar_grafo_caminho(B, A, m, n, caminho=None,mostrar_labirinto=True,nom
                 ax.scatter(
                     xs[j],  # Coordenada horizontal do centro.
                     ys[i],  # Coordenada vertical do centro.
-                    color="blue",
+                    color="darkblue",
                     s=12,   # Tamanho do marcador.
                     zorder=3  # Desenha os vértices sobre as arestas.
                 )
@@ -170,7 +170,7 @@ def visualizar_grafo_caminho(B, A, m, n, caminho=None,mostrar_labirinto=True,nom
             # Desenha o caminho conectando os vértices na ordem recebida.
             ax.plot(
                 pontos_x, pontos_y,
-                color="yellow",
+                color="red",
                 linewidth=2.5,
                 zorder=4,     # O caminho aparece sobre os vértices e as arestas.
                 label="Caminho mínimo"

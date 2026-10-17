@@ -85,7 +85,8 @@ def main():
     visualizar_grafo_caminho(
         B, A, m, n,
         mostrar_labirinto=True,
-        nome_arquivo="grafo_sobre_labirinto.png"
+        nome_arquivo="grafo_sobre_labirinto.png", 
+        pixels= pixels
     )
 
     # ==================================================
