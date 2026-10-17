@@ -65,7 +65,7 @@ def visualizar_caminho(img, caminho, m, n, pixels):
     fig.savefig("caminho.png", dpi=200, bbox_inches="tight")
     plt.show() 
 
-def visualizar_grafo_caminho(B, A, m, n, caminho=None,mostrar_labirinto=True,nome_arquivo="grafo.png"):
+def visualizar_grafo_caminho(B, A, m, n, caminho=None,mostrar_labirinto=True,nome_arquivo="grafo.png", pixels=None):
 
         """Visualiza o grafo construído a partir do labirinto.
            Ou destaca o caminho mínimo encontrado sobre o grafo.
@@ -76,9 +76,7 @@ def visualizar_grafo_caminho(B, A, m, n, caminho=None,mostrar_labirinto=True,nom
             m: número de linhas da grade.
             n: número de colunas da grade.
             caminho: lista ordenada de IDs dos vértices do caminho mínimo.
-                    Se None ou vazia, o caminho não é destacado.
             mostrar_labirinto: se True, exibe a imagem do labirinto ao fundo;
-                            se False, exibe somente o grafo.
             nome_arquivo: nome do arquivo em que a figura será salva.
         """
         if B.ndim != 2:
@@ -192,7 +190,26 @@ def visualizar_grafo_caminho(B, A, m, n, caminho=None,mostrar_labirinto=True,nom
             )
 
             ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1))
-            
+
+        # marca a entrada e a saída do labirinto.
+        if pixels is not None:
+            linha_entrada, coluna_entrada = pixels[0]
+            linha_saida, coluna_saida = pixels[1]
+
+            ax.scatter(
+                coluna_entrada, linha_entrada,
+                color="green", s=80,
+                zorder=5, label="Entrada"
+            )
+
+            ax.scatter(
+                coluna_saida, linha_saida,
+                color="blue", s=80,
+                zorder=5, label="Saída"
+            )
+
+            ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1))
+
         # Define o título conforme a presença do caminho e a exibição do labirinto.
         titulo = (
             "Grafo completo com caminho mínimo"
