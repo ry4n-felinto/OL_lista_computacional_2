@@ -21,9 +21,9 @@ def calcular_metricas(caminho, s, t):
 
     if caminho:
 
-        custo = len(caminho)
-        arestas = len(caminho)
-        vertices = len(caminho)+1
+        custo = len(caminho) -1 
+        arestas = len(caminho) -1
+        vertices = len(caminho)
 
         return custo, arestas, vertices
 

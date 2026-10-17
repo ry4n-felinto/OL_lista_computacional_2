@@ -1,6 +1,4 @@
-import matplotlib.pyplot as plt
 import numpy as np
-
 
 def coordenadas_centros(B: np.ndarray, m: int, n: int):
     """
@@ -103,77 +101,3 @@ def construir_grafo(B: np.ndarray, m: int, n: int) -> np.ndarray:
                     A[v, u] = 1
 
     return A
-
-
-def visualizar_grafo(
-    B: np.ndarray,
-    A: np.ndarray,
-    m: int,
-    n: int
-):
-    """
-    Desenha os vértices e as arestas sobre o labirinto,
-    sem desenhar a grade.
-    """
-    if B.ndim != 2:
-        raise ValueError("A imagem binária deve ser bidimensional.")
-
-    if A.shape != (m * n, m * n):
-        raise ValueError("A dimensão da matriz A é incompatível.")
-
-    altura, largura = B.shape
-    xs, ys = coordenadas_centros(B, m, n)
-
-    fig, ax = plt.subplots(figsize=(12, 12))
-
-    ax.imshow(
-        B,
-        cmap="gray",
-        origin="upper",
-        interpolation="nearest"
-    )
-
-    # Desenha somente as arestas existentes.
-    for i in range(m):
-        for j in range(n):
-            u = i * n + j
-
-            # Aresta para a direita.
-            if j + 1 < n and A[u, u + 1] == 1:
-                ax.plot(
-                    [xs[j], xs[j + 1]],
-                    [ys[i], ys[i]],
-                    color="red",
-                    linewidth=1.2,
-                    zorder=2
-                )
-
-            # Aresta para baixo.
-            if i + 1 < m and A[u, u + n] == 1:
-                ax.plot(
-                    [xs[j], xs[j]],
-                    [ys[i], ys[i + 1]],
-                    color="red",
-                    linewidth=1.2,
-                    zorder=2
-                )
-
-    # Desenha todos os vértices.
-    for i in range(m):
-        for j in range(n):
-            ax.scatter(
-                xs[j],
-                ys[i],
-                color="blue",
-                s=12,
-                zorder=3
-            )
-
-    ax.set_title("Grafo sobreposto ao labirinto")
-    ax.set_xlim(-0.5, largura - 0.5)
-    ax.set_ylim(altura - 0.5, -0.5)
-    ax.set_aspect("equal")
-    ax.set_axis_off()
-
-    plt.tight_layout()
-    plt.show()
