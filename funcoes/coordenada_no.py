@@ -30,7 +30,7 @@ def coordenada_no(
     if not (1 <= i <= m and 1 <= j <= n):
         raise ValueError("Coordenadas da célula inválidas.")
 
-    x = (j - 0.5) * largura / n
-    y = (i - 0.5) * altura / m
+    x = (2 * (j - 1) + 1.5) * largura / (2 * n + 1)
+    y = (2 * (i - 1) + 1.5) * altura / (2 * m + 1)
 
     return x, y
