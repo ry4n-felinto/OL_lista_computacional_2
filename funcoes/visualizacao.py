@@ -1,12 +1,10 @@
-import numpy as np 
 import matplotlib.pyplot as plt
 
 from funcoes.coordenada_no import coordenada_no
-from funcoes.id_no import id_no
 from funcoes.construir_grafo import coordenadas_centros
 
 
-def visualizar_caminho(img, caminho, m, n, s, t, pixels):
+def visualizar_caminho(img, caminho, m, n, pixels):
     """Desenha o caminho mínimo sobre a imagem do labirinto.
 
     Parâmetros:
@@ -14,8 +12,6 @@ def visualizar_caminho(img, caminho, m, n, s, t, pixels):
         caminho: lista ordenada de IDs dos vértices do caminho.
         m: número de linhas da grade.
         n: número de colunas da grade.
-        s: ID do vértice de origem.
-        t: ID do vértice de destino.
     """
 
     altura, largura = img.shape[:2]
@@ -68,12 +64,7 @@ def visualizar_caminho(img, caminho, m, n, s, t, pixels):
     fig.savefig("caminho.png", dpi=200, bbox_inches="tight")
     plt.show() 
 
-def visualizar_grafo_caminho(
-    B, A, m, n,
-    caminho=None,
-    mostrar_labirinto=True,
-    nome_arquivo="grafo.png"
-    ):
+def visualizar_grafo_caminho(B, A, m, n, caminho=None,mostrar_labirinto=True,nome_arquivo="grafo.png"):
 
         """
         Desenha os vértices e as arestas sobre o labirinto,

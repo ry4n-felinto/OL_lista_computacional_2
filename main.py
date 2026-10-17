@@ -1,4 +1,3 @@
-from pathlib import Path
 from time import perf_counter
 
 import matplotlib.pyplot as plt
@@ -119,9 +118,7 @@ def main():
     # ==================================================
 
     # (c) Apenas o caminho mínimo sobre o labirinto.
-    visualizar_caminho(
-        img, caminho_ids, m, n, s, t, pixels
-    )
+    visualizar_caminho(img, caminho_ids, m, n, pixels)
 
     # (d) Grafo completo com o caminho mínimo destacado.
     visualizar_grafo_caminho(
