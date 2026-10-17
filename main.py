@@ -9,10 +9,8 @@ from funcoes.encontrar_extremos import encontrar_extremos
 from funcoes.construir_grafo import construir_grafo
 from funcoes.id_no import id_no
 from funcoes.dijkstra import dijkstra
-from funcoes.reconstruir_caminho import (reconstruir_caminho,calcular_metricas,
-)
-from funcoes.visualizacao import (visualizar_caminho, visualizar_grafo_caminho,
-)
+from funcoes.reconstruir_caminho import (reconstruir_caminho,calcular_metricas,)
+from funcoes.visualizacao import (visualizar_caminho, visualizar_grafo_caminho,)
 
 
 def main():
